@@ -48,7 +48,35 @@ module Manage
           render "edit", flash: { danger: "There were issues removing the vessel" }
         end
       end
+      
+      # New code start. Will write explanation later #
+      def move_modal
+        @vessel = scope.find(params[:id])
+        authorize([:manage, :settings, @vessel])
+        @employees = @vessel.employments
+        @available_vessels = scope.where.not(id: @vessel.id)
+      end
 
+      def move_employees
+        @vessel = scope.find(params[:id])
+        authorize([:manage, :settings, @vessel])
+
+        @employees = @vessel.employments
+        @new_vessel = scope.find_by(name: params[:new_vessel])
+
+        if @new_vessel
+          @employees.each do |employee|
+            employee.update(vessel_id: @new_vessel.id)
+          end
+          @vessel.destroy
+          redirect_to edit_manage_organization_settings_meta_data_path, flash: { success: "Employees moved, Vessel removed" }
+        else
+          redirect_back fallback_location: edit_manage_organization_settings_meta_data_path,
+                        flash: { danger: "There were issues moving the employees" }
+        end
+      end
+      # New code end #
+      
       private
 
       def scope

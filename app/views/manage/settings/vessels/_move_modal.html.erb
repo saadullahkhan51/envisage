@@ -1,0 +1,38 @@
+<%= component "modal", title: "#{action_name.titleize} Employees before Delete", content_only: true do |c| %>
+  <% c.body do %>
+    <%= form_tag controller: controller_name,
+                action: :move_employees,
+                builder: WrappedFormBuilder,
+                remote: true do %>
+      <div class="modal__body">
+        <%= select_tag :new_vessel, options_for_select(@available_vessels.pluck(:name)), prompt: 'Choose new vessel...', required: true %>
+        <ul class="l-list">
+          <% @employees.each do |employee| %>
+            <li class="l-list__item"><%= employee.user.full_name %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="modal__footer">
+        <%= button_tag "Cancel",
+                       type: :button,
+                       class: "btn--link u-mr u-text-muted",
+                       data: { target: "form-activation.action", action: "modal#hide" } %>
+        <%= submit_tag "Move Employees",
+          class: "btn btn--primary",
+          data: {
+            cy: "vessel-submit",
+            disable_with: "Saving"
+          }
+        %>
+        <%= link_to "Delete", manage_organization_settings_vessel_path(@organization, @vessel),
+                                              method: :delete,
+                                              title: "Remove",
+                                              class: "btn btn--danger",
+                                              data: {
+                                                confirm: "Are you sure you want to remove #{@vessel.name}?",
+                                                cy: "vessel-#{@vessel.id}-remove"
+                                              }  %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
