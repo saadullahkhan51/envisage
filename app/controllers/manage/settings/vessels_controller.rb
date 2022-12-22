@@ -50,7 +50,7 @@ module Manage
       end
       
       # New code start #
-      def move_modal
+      def display_modal # bad action name. Cant think of a better one
         @vessel = scope.find(params[:id])
         authorize([:manage, :settings, @vessel])
         @employees = @vessel.employments
@@ -65,7 +65,6 @@ module Manage
         @new_vessel = scope.find_by(name: params[:new_vessel])
         # no check for @new_vessel since :new_vessel is required
         move_employees_helper(@employees, @new_vessel)
-        # shouldn't give any issues
         @vessel.destroy
         redirect_to edit_manage_organization_settings_meta_data_path, 
                          flash: { success: "Employees moved, Vessel removed" }

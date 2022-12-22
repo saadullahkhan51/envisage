@@ -22,14 +22,13 @@ module Manage
       def destroy?
         true
       end
-      # new code start:
       def move_employees?
         true
       end
-      def move_modal?
+      
+      def display_modal?
         true
       end
-      # new code end
     end
   end
 end

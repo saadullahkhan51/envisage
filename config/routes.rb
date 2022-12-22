@@ -21,7 +21,7 @@ Rails.application.routes.draw do
         resources :vessels, except: %i[index] do
           member do
             post :move_employees
-            get :move_modal
+            get :display_modal
           end
         end
       end
